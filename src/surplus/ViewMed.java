@@ -58,9 +58,7 @@ public class ViewMed extends javax.swing.JFrame {
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {"Dolo", "123", "5", "10"},
-                {"Para", "895", "4", "15"},
-                {null, null, null, null}
+
             },
             new String [] {
                 "NAME", "COMPANY ID", "QUANTITY", "PRICE"

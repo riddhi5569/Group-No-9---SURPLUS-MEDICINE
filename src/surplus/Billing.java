@@ -4,6 +4,17 @@
  */
 package surplus;
 
+import javax.swing.JOptionPane;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import java.awt.HeadlessException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.*;
+import surplus.UserDashboard;
+
 /**
  *
  * @author Riddhi
@@ -17,10 +28,59 @@ public class Billing extends javax.swing.JFrame {
         initComponents();
         setLocationRelativeTo(null);
         BillHeader();
+        
+        fquantity.getDocument().addDocumentListener(new DocumentListener() {
+        @Override
+        public void changedUpdate(DocumentEvent e) {
+            calculateTotal();
+        }
+        @Override
+        public void removeUpdate(DocumentEvent e) {
+            calculateTotal();
+        }
+        @Override
+        public void insertUpdate(DocumentEvent e) {
+            calculateTotal();
+        }
+
+            private void calculateTotal() {
+                try {
+        int quantity = Integer.parseInt(fquantity.getText());
+        double price = Double.parseDouble(fprice.getText());
+        double total = quantity * price;
+        ftotal.setText(String.valueOf(total));
+    } catch (NumberFormatException e) {
+        // If quantity or price is not a valid number, clear the total field
+        ftotal.setText("0.00");
     }
-    private void BillHeader(){
-    farea.setText("          SURPLUS MEDICINE MARKETPLACE" + "\n" + "Invoice of your required medicines." + "\n" + "MedName" + "   ID" + "   Quantity" + "   Price per Unit" + "   Total");
-    
+            }
+    });
+
+    fprice.getDocument().addDocumentListener(new DocumentListener() {
+        public void changedUpdate(DocumentEvent e) {
+            calculateTotal();
+        }
+        public void removeUpdate(DocumentEvent e) {
+            calculateTotal();
+        }
+        public void insertUpdate(DocumentEvent e) {
+            calculateTotal();
+        }
+
+            private void calculateTotal() {
+                
+            }
+    });
+ 
+
+    }
+
+    private void BillHeader() {
+        farea.setText("""
+                                  SURPLUS MEDICINE MARKETPLACE
+                      \tInvoice of your required medicines.
+                      MedName          ID       Quantity       PricePerUnit      Total
+                      -----------------------------------------------------------------------------""");
     }
 
     /**
@@ -51,9 +111,13 @@ public class Billing extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         ftotal = new javax.swing.JTextField();
         jButton4 = new javax.swing.JButton();
+        ffinal = new javax.swing.JButton();
+        fs = new javax.swing.JButton();
+        ff = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setUndecorated(true);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
@@ -63,67 +127,71 @@ public class Billing extends javax.swing.JFrame {
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel2.setText("COMPANY ID :");
-        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 179, 116, 34));
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 180, 116, 34));
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel3.setText("QUANTITY :");
-        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 225, 97, 47));
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 280, 97, 47));
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel4.setText("PRICE :");
-        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 290, 89, 35));
-        getContentPane().add(fid, new org.netbeans.lib.awtextra.AbsoluteConstraints(164, 173, 179, 40));
-        getContentPane().add(fquantity, new org.netbeans.lib.awtextra.AbsoluteConstraints(164, 229, 179, 39));
+        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 240, 89, 35));
+        getContentPane().add(fid, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 180, 179, 40));
+        getContentPane().add(fquantity, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 290, 179, 39));
 
         fprice.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 fpriceActionPerformed(evt);
             }
         });
-        getContentPane().add(fprice, new org.netbeans.lib.awtextra.AbsoluteConstraints(164, 290, 179, 35));
+        getContentPane().add(fprice, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 240, 179, 35));
 
+        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jButton1.setText("CLEAR");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(29, 419, 97, 33));
+        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 420, 97, 40));
 
         farea.setColumns(20);
         farea.setRows(5);
         jScrollPane1.setViewportView(farea);
 
-        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(388, 112, 296, 306));
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 90, 330, 320));
 
+        jButton2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jButton2.setText("ADD TO CART");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(249, 419, 118, 33));
+        getContentPane().add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 420, 118, 40));
 
+        jButton3.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jButton3.setText("EXIT");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton3ActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(144, 418, 87, 36));
+        getContentPane().add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 420, 87, 40));
 
+        fprint.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         fprint.setText("PRINT BILL");
         fprint.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 fprintActionPerformed(evt);
             }
         });
-        getContentPane().add(fprint, new org.netbeans.lib.awtextra.AbsoluteConstraints(447, 436, 166, 47));
+        getContentPane().add(fprint, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 450, 110, 40));
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel5.setText("MEDICINE NAME :");
-        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 125, -1, 36));
-        getContentPane().add(fname, new org.netbeans.lib.awtextra.AbsoluteConstraints(164, 125, 179, 36));
+        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 100, -1, 36));
+        getContentPane().add(fname, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 100, 179, 36));
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel6.setText("TOTAL :");
@@ -134,7 +202,7 @@ public class Billing extends javax.swing.JFrame {
                 ftotalActionPerformed(evt);
             }
         });
-        getContentPane().add(ftotal, new org.netbeans.lib.awtextra.AbsoluteConstraints(164, 343, 179, 40));
+        getContentPane().add(ftotal, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 340, 180, 40));
 
         jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cross3.png"))); // NOI18N
         jButton4.addActionListener(new java.awt.event.ActionListener() {
@@ -144,29 +212,92 @@ public class Billing extends javax.swing.JFrame {
         });
         getContentPane().add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 10, 50, 50));
 
+        ffinal.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        ffinal.setText("FINAL TOTAL");
+        ffinal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ffinalActionPerformed(evt);
+            }
+        });
+        getContentPane().add(ffinal, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 420, 120, 50));
+
+        fs.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/search2.png"))); // NOI18N
+        fs.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fsActionPerformed(evt);
+            }
+        });
+        getContentPane().add(fs, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 100, 40, 40));
+        getContentPane().add(ff, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 420, 90, 50));
+
         jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/xyz.LARGE2.png"))); // NOI18N
         getContentPane().add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 700, 500));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+private void updateFinalTotal() {
+    double finalTotal = 0.0;
 
+    // Read the lines from the text area (cart) and sum up all totals
+    String[] lines = farea.getText().split("\\n");
+    for (String line : lines) {
+        String[] parts = line.split("\\s+");
+        if (parts.length > 0) {
+            try {
+                // Assume the total is in the last column
+                double itemTotal = Double.parseDouble(parts[parts.length - 1]);
+                finalTotal += itemTotal;
+            } catch (NumberFormatException e) {
+                // Ignore lines that don't have valid totals
+            }
+        }
+    }
+
+    // Set the final total
+    ff.setText(String.valueOf(finalTotal));
+}
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-    fname.setText("");
-    fid.setText("");
-    fquantity.setText("");
-    fprice.setText("");
-    ftotal.setText("");
-    
+        fname.setText("");
+        fid.setText("");
+        fquantity.setText("");
+        fprice.setText("");
+        ftotal.setText("");
+
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-farea.setText(fname.getText()+"-"+fid.getText()+" "+fquantity.getText()+fprice.getText()+ftotal.getText());
+        String medName = fname.getText();
+        String id = fid.getText();
+        String quantity = fquantity.getText();
+        String price = fprice.getText();
+        String total = ftotal.getText();
+
+        farea.append("\n" + medName + "             " + id + "\t" + quantity + "\t" + price + "\t" + total);
+        double finalTotal = 0.0;
+
+    // Read the lines from the text area (cart) and sum up all totals
+    String[] lines = farea.getText().split("\\n");
+    for (String line : lines) {
+        String[] parts = line.split("\\s+");
+        if (parts.length > 0) {
+            try {
+                // Assume the total is in the last column
+                double itemTotal = Double.parseDouble(parts[parts.length - 1]);
+                finalTotal += itemTotal;
+            } catch (NumberFormatException e) {
+                // Ignore lines that don't have valid totals
+            }
+        }
+    }
+
+    // Set the final total
+    ff.setText(String.valueOf(finalTotal));
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-UserDashboard ex = new UserDashboard();
+        UserDashboard ex = new UserDashboard();
         ex.setVisible(true);          // TODO add your handling code here:
     }//GEN-LAST:event_jButton3ActionPerformed
 
@@ -175,22 +306,70 @@ UserDashboard ex = new UserDashboard();
     }//GEN-LAST:event_fpriceActionPerformed
 
     private void fprintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fprintActionPerformed
-   try{
-        farea.setText(farea.getText());
-    farea.print();
-   }
-   catch(Exception e){}
+        try {
+            farea.setText(farea.getText());
+            farea.print();
+        } catch (Exception e) {
+        }
 // TODO add your handling code here:
     }//GEN-LAST:event_fprintActionPerformed
 
     private void ftotalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ftotalActionPerformed
-        // TODO add your handling code here:
+
+// TODO add your handling code here:
     }//GEN-LAST:event_ftotalActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-UserDashboard ds = new UserDashboard();
+        UserDashboard ds = new UserDashboard();
         ds.setVisible(true);          // TODO add your handling code here:
     }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void fsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fsActionPerformed
+        Connection con = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/surplus", "root", "Purvariddhi05");
+
+            String user = fname.getText();
+            String sql = "SELECT * FROM med WHERE name = ?";
+            stmt = con.prepareStatement(sql);
+            stmt.setString(1, user);
+            rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                fname.setText(rs.getString("name"));
+                fid.setText(rs.getString("companyid"));
+                fprice.setText(rs.getString("price"));
+            } else {
+                JOptionPane.showMessageDialog(this, "No Medicine Found");
+            }
+        } catch (HeadlessException | ClassNotFoundException | SQLException e) {
+            JOptionPane.showMessageDialog(this, "An error occurred: " + e.getMessage());
+        } finally {
+            // Clean up resources
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stmt != null) {
+                    stmt.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        // TODO add your handling code here:
+    }//GEN-LAST:event_fsActionPerformed
+
+    private void ffinalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ffinalActionPerformed
+           // TODO add your handling code here:
+    }//GEN-LAST:event_ffinalActionPerformed
 
     /**
      * @param args the command line arguments
@@ -229,11 +408,14 @@ UserDashboard ds = new UserDashboard();
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea farea;
+    private javax.swing.JTextField ff;
+    private javax.swing.JButton ffinal;
     private javax.swing.JTextField fid;
     private javax.swing.JTextField fname;
     private javax.swing.JTextField fprice;
     private javax.swing.JButton fprint;
     private javax.swing.JTextField fquantity;
+    private javax.swing.JButton fs;
     private javax.swing.JTextField ftotal;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;

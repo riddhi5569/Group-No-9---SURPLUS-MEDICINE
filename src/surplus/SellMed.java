@@ -16,6 +16,7 @@ import java.sql.DriverManager;
  * @author Riddhi
  */
 public class SellMed extends javax.swing.JFrame {
+
     public SellMed() {
         initComponents();
         setLocationRelativeTo(null);
@@ -39,7 +40,7 @@ public class SellMed extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         fname = new javax.swing.JTextField();
-        fcompany = new javax.swing.JTextField();
+        fcompanyid = new javax.swing.JTextField();
         fquantity = new javax.swing.JTextField();
         fprice = new javax.swing.JTextField();
         fadd = new javax.swing.JButton();
@@ -90,12 +91,12 @@ public class SellMed extends javax.swing.JFrame {
         });
         getContentPane().add(fname, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 120, 256, 49));
 
-        fcompany.addActionListener(new java.awt.event.ActionListener() {
+        fcompanyid.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                fcompanyActionPerformed(evt);
+                fcompanyidActionPerformed(evt);
             }
         });
-        getContentPane().add(fcompany, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 210, 256, 49));
+        getContentPane().add(fcompanyid, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 210, 256, 49));
 
         fquantity.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -131,9 +132,9 @@ public class SellMed extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_fnameActionPerformed
 
-    private void fcompanyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fcompanyActionPerformed
+    private void fcompanyidActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fcompanyidActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_fcompanyActionPerformed
+    }//GEN-LAST:event_fcompanyidActionPerformed
 
     private void fquantityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fquantityActionPerformed
         // TODO add your handling code here:
@@ -148,36 +149,40 @@ public class SellMed extends javax.swing.JFrame {
     }//GEN-LAST:event_fpriceActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-UserDashboard o = new UserDashboard();
+        UserDashboard o = new UserDashboard();
         o.setVisible(true);                    // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void faddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_faddActionPerformed
-String name = fname.getText();
-String company = fcompany.getText();
-String quantity = fquantity.getText();
-String price = fprice.getText();
-java.sql.Connection con = null;
-try{
-    Class.forName("com.mysql.jdbc.Driver");
-      ConnectionProvider c = new ConnectionProvider();
-String q ="INSERT INTO med(name,companyid,quantity,price) values('"+name+"','"+company+"','"+quantity+"','"+price+"')";
-PreparedStatement stmt = c.prepareStatement(q);
-        int i= stmt.executeUpdate(q);
-        if(i>0)
-        {
-            JOptionPane.showMessageDialog(this,"Selling Successfull !");
-            ViewMed vm=new ViewMed();
+
+        if (fname.getText().isEmpty() || fcompanyid.getText().isEmpty() || fquantity.getText().isEmpty()
+                || fprice.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Please fill all fields.");
+            return;
+        }
+
+        String name = fname.getText();
+        String companyid = fcompanyid.getText();
+        String quantity = fquantity.getText();
+        String price = fprice.getText();
+        
+        int a = JOptionPane.showConfirmDialog(null, "Selling Successfull !", "select", JOptionPane.YES_NO_OPTION);
+        if (a == 0) {
+            String query = "insert into med values('" + name + "','" + companyid + "','" + quantity + "','" + price + "')";
+            try {
+                ConnectionProvider c = new ConnectionProvider();
+                c.s.executeUpdate(query);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            ViewMed vm = new ViewMed();
             vm.setVisible(true);
-            this.dispose();
-            
+
+            this.setVisible(false);
+
+        } else {
+            return;
         }
-        }
-        catch(Exception e)
-        {
-            System.out.println(e);
-                } 
-JOptionPane.showMessageDialog(this,"selling successful");
     }//GEN-LAST:event_faddActionPerformed
 
     /**
@@ -217,7 +222,7 @@ JOptionPane.showMessageDialog(this,"selling successful");
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton fadd;
-    private javax.swing.JTextField fcompany;
+    private javax.swing.JTextField fcompanyid;
     private javax.swing.JTextField fname;
     private javax.swing.JTextField fprice;
     private javax.swing.JTextField fquantity;

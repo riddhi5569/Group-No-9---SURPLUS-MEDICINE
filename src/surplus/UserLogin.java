@@ -137,7 +137,7 @@ public class UserLogin extends javax.swing.JFrame {
         int a = JOptionPane.showConfirmDialog(null, "Do you want to close application?", "Select", JOptionPane.YES_NO_OPTION);
         if (a == 0) {
             System.exit(0);
-        }
+        }this.setVisible(false);
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
 

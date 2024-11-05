@@ -173,15 +173,12 @@ public class SignUp extends javax.swing.JFrame {
             return;
         }
 
-        if (evt.getSource() == fsignup) {
             String name = fname.getText();
             String username = fusername.getText();
             String password = fpassword.getText();
             String mobile = fmobile.getText();
             String address = faddress.getText();
 
-            int a = JOptionPane.showConfirmDialog(null, "Signup !!", "select", JOptionPane.YES_NO_OPTION);
-            if (a == 0) {
                 String query = "insert into signup values('" + name + "','" + mobile + "','" + username + "','" + password + "','" + address + "')";
                 try {
                     ConnectionProvider c = new ConnectionProvider();
@@ -193,12 +190,7 @@ public class SignUp extends javax.swing.JFrame {
                 e.setVisible(true);
 
                 this.setVisible(false);
-
-            } else {
-                return;
-            }
-
-        }        // TODO add your handling code here:
+// TODO add your handling code here:
     }//GEN-LAST:event_fsignupActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed

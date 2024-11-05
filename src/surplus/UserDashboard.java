@@ -128,7 +128,7 @@ UserLogin q = new UserLogin();
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-SellMed n = new SellMed();
+    SellMed n = new SellMed();
         n.setVisible(true);                    // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -142,7 +142,7 @@ Billing o = new Billing();
         if (a == 0) { 
             UserLogin q = new UserLogin();
         q.setVisible(true);        
-        }
+        }this.setVisible(false);
    // TODO add your handling code here:
     }//GEN-LAST:event_jButton6ActionPerformed
 

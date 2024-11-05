@@ -95,18 +95,19 @@ public class AdminLogin extends javax.swing.JFrame {
     }//GEN-LAST:event_fusernameActionPerformed
 
     private void floginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_floginActionPerformed
-         String correctUsername = "admin"; // Change this to your desired username
+         String correctUsername = "Admin"; // Change this to your desired username
     String correctPassword = "password123"; // Change this to your desired password
 
     String username = fusername.getText();
     String password = fpassword.getText();
 
     if (username.equals(correctUsername) && password.equals(correctPassword)) {
+        JOptionPane.showMessageDialog(null, "Login Successfully!");
         AdminDashboard q = new AdminDashboard();
         q.setVisible(true);
         this.dispose(); // Optional: Close the login window
     } else {
-        JOptionPane.showMessageDialog(this, "Username or Password is incorrect");
+        JOptionPane.showMessageDialog(this, "Username or Password is incorrect!");
         fusername.setText("");
         fpassword.setText("");
     }
